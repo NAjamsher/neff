@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-neff-dark text-white font-sans;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  .neff-card {
+    @apply bg-neff-card border border-neff-border rounded-xl p-5;
+  }
+
+  .neff-btn {
+    @apply bg-neff-green text-black font-semibold px-5 py-2.5 
+           rounded-lg hover:opacity-90 transition-opacity cursor-pointer;
+  }
+
+  .neff-input {
+    @apply w-full bg-neff-border border border-neff-border text-white 
+           rounded-lg px-4 py-3 outline-none focus:border-neff-green 
+           transition-colors placeholder-neff-muted;
+  }
+}
