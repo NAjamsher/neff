@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import connect_db, close_db
-from app.api.routes import auth, users, workouts, ai, overload
-
+from app.api.routes import auth, users, workouts, ai, overload, recovery, records
 app = FastAPI(
     title="NEFF",
     description="No Excuse For Fitness — AI Coaching Platform",
@@ -30,6 +29,12 @@ app.include_router(users.router, prefix="/api/v1")
 app.include_router(workouts.router, prefix="/api/v1")
 app.include_router(ai.router, prefix="/api/v1")
 app.include_router(overload.router, prefix="/api/v1")
+app.include_router(recovery.router, prefix="/api/v1")
+app.include_router(records.router, prefix="/api/v1")
+
+
+
+
 
 @app.get("/")
 def root():

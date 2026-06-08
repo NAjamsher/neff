@@ -9,6 +9,7 @@ import WorkoutPage from './pages/WorkoutPage'
 import CoachPage from './pages/CoachPage'
 import AppLayout from './components/layout/AppLayout'
 import ProgressPage from './pages/ProgressPage'
+import RecoveryPage from './pages/RecoveryPage'
 
 function PrivateRoute({ children }) {
   const token = useAuthStore((s) => s.token)
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="workout" element={<WorkoutPage />} />
           <Route path="coach" element={<CoachPage />} />
+          <Route path="recovery" element={<RecoveryPage />} />
           <Route path="progress" element={<ProgressPage />} />
         </Route>
       </Routes>

@@ -1,11 +1,12 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import useAuthStore from '../../store/authStore'
-import { LayoutDashboard, Dumbbell, MessageCircle, LogOut, Zap, TrendingUp } from 'lucide-react'
+import { LayoutDashboard, Dumbbell, MessageCircle, LogOut, Zap, TrendingUp, Heart } from 'lucide-react'
 
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/workout',   icon: Dumbbell,        label: 'Workout' },
   { to: '/progress',  icon: TrendingUp,      label: 'Progress' },
+  { to: '/recovery',  icon: Heart,           label: 'Recovery' },
   { to: '/coach',     icon: MessageCircle,   label: 'AI Coach' },
 ]
 

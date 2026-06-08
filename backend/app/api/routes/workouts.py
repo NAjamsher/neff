@@ -81,3 +81,55 @@ async def get_stats(
         "total_workouts": total,
         "workouts_this_week": weekly,
     }
+
+
+@router.get("/streak")
+async def get_streak(
+    current_user=Depends(get_current_user),
+    db=Depends(get_database),
+):
+    """
+    Calculate current workout streak.
+    A streak is consecutive days with at least one workout logged.
+    """
+    user_id = str(current_user["_id"])
+
+    cursor = db["workout_logs"].find(
+        {"user_id": user_id}
+    ).sort("logged_at", -1)
+
+    logs = []
+    async for log in cursor:
+        logs.append(log["logged_at"].date())
+
+    if not logs:
+        return {"current_streak": 0, "longest_streak": 0}
+
+    # Remove duplicate dates
+    unique_dates = sorted(set(logs), reverse=True)
+
+    # Calculate current streak
+    current_streak = 1
+    for i in range(1, len(unique_dates)):
+        diff = (unique_dates[i-1] - unique_dates[i]).days
+        if diff == 1:
+            current_streak += 1
+        else:
+            break
+
+    # Calculate longest streak ever
+    longest_streak = 1
+    temp = 1
+    for i in range(1, len(unique_dates)):
+        diff = (unique_dates[i-1] - unique_dates[i]).days
+        if diff == 1:
+            temp += 1
+            longest_streak = max(longest_streak, temp)
+        else:
+            temp = 1
+
+    return {
+        "current_streak": current_streak,
+        "longest_streak": longest_streak,
+        "total_workout_days": len(unique_dates),
+    }

@@ -127,31 +127,27 @@ async def ask_coach(
     current_user=Depends(get_current_user),
     db=Depends(get_database),
 ):
-    profile = current_user.get("profile", {})
+    from app.services.context import build_user_context, format_context_for_ai
 
-    # Get recent workouts for context
-    cursor = db["workout_logs"].find(
-        {"user_id": str(current_user["_id"])}
-    ).sort("logged_at", -1).limit(3)
-
-    recent_workouts = []
-    async for log in cursor:
-        recent_workouts.append(log["workout_day_name"])
-
-    recent_str = ", ".join(recent_workouts) if recent_workouts else "No workouts logged yet"
+    # Build complete user context — everything the AI needs
+    context = await build_user_context(str(current_user["_id"]), db)
+    context_str = format_context_for_ai(context)
 
     messages = [
         {
             "role": "system",
-            "content": f"""You are NEFF, a personal AI fitness coach. Be specific, practical and motivating.
+            "content": f"""You are NEFF, a personal AI fitness coach.
+You have complete knowledge about this user. Use it to give specific personalized advice.
 
-User Profile:
-- Name: {current_user['name']}
-- Goal: {profile.get('goal', 'general fitness')}
-- Experience: {profile.get('experience_level', 'beginner')}
-- Recent workouts: {recent_str}
+{context_str}
 
-Keep answers under 4 sentences. Always relate to the user's goal."""
+Rules:
+- Always reference the user's actual data in your answer
+- If recovery is poor recommend reducing intensity
+- If there is a plateau suggest specific solutions
+- If streak is high acknowledge and motivate
+- Keep answers under 5 sentences
+- Be direct motivating and specific"""
         },
         {
             "role": "user",
@@ -160,5 +156,4 @@ Keep answers under 4 sentences. Always relate to the user's goal."""
     ]
 
     reply = await call_llama(messages)
-
     return {"reply": reply.strip()}
