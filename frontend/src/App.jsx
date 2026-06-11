@@ -10,7 +10,8 @@ import CoachPage from './pages/CoachPage'
 import AppLayout from './components/layout/AppLayout'
 import ProgressPage from './pages/ProgressPage'
 import RecoveryPage from './pages/RecoveryPage'
-
+import WeeklyReviewPage from './pages/WeeklyReviewPage'
+import NutritionPage from './pages/NutritionPage'
 function PrivateRoute({ children }) {
   const token = useAuthStore((s) => s.token)
   return token ? children : <Navigate to="/login" replace />
@@ -41,6 +42,8 @@ export default function App() {
           <Route path="coach" element={<CoachPage />} />
           <Route path="recovery" element={<RecoveryPage />} />
           <Route path="progress" element={<ProgressPage />} />
+          <Route path="weekly-review" element={<WeeklyReviewPage />} />
+          <Route path="nutrition" element={<NutritionPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
