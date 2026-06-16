@@ -12,6 +12,7 @@ import ProgressPage from './pages/ProgressPage'
 import RecoveryPage from './pages/RecoveryPage'
 import WeeklyReviewPage from './pages/WeeklyReviewPage'
 import NutritionPage from './pages/NutritionPage'
+
 function PrivateRoute({ children }) {
   const token = useAuthStore((s) => s.token)
   return token ? children : <Navigate to="/login" replace />
@@ -32,18 +33,23 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public */}
         <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+
+        {/* Onboarding */}
         <Route path="/onboarding" element={<PrivateRoute><OnboardingPage /></PrivateRoute>} />
+
+        {/* App */}
         <Route path="/" element={<PrivateRoute><AppLayout /></PrivateRoute>}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="workout" element={<WorkoutPage />} />
-          <Route path="coach" element={<CoachPage />} />
-          <Route path="recovery" element={<RecoveryPage />} />
           <Route path="progress" element={<ProgressPage />} />
-          <Route path="weekly-review" element={<WeeklyReviewPage />} />
+          <Route path="recovery" element={<RecoveryPage />} />
           <Route path="nutrition" element={<NutritionPage />} />
+          <Route path="weekly-review" element={<WeeklyReviewPage />} />
+          <Route path="coach" element={<CoachPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

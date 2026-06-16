@@ -19,6 +19,9 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup():
     await connect_db()
+    # Load FAISS knowledge base into memory
+    from app.services.rag import load_knowledge_base
+    load_knowledge_base()
 
 @app.on_event("shutdown")
 async def shutdown():

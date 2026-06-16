@@ -5,13 +5,20 @@ from enum import Enum
 
 class MuscleGroup(str, Enum):
     CHEST = "chest"
+    UPPER_CHEST = "upper_chest"
     BACK = "back"
     SHOULDERS = "shoulders"
     BICEPS = "biceps"
     TRICEPS = "triceps"
     LEGS = "legs"
+    CALVES = "calves"
+    GLUTES = "glutes"
     CORE = "core"
     FULL_BODY = "full_body"
+    CARDIO = "cardio"
+    FOREARMS = "forearms"
+    TRAPS = "traps"
+    LATS = "lats"
 
 
 class Exercise(BaseModel):

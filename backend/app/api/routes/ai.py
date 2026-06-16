@@ -128,26 +128,42 @@ async def ask_coach(
     db=Depends(get_database),
 ):
     from app.services.context import build_user_context, format_context_for_ai
+    from app.services.rag import search_knowledge_base, is_knowledge_base_loaded
 
-    # Build complete user context — everything the AI needs
+    # Build complete user context
     context = await build_user_context(str(current_user["_id"]), db)
     context_str = format_context_for_ai(context)
+
+    # Search knowledge base for relevant fitness research
+    # This is the RAG part — retrieve relevant documents
+    knowledge_context = ""
+    if is_knowledge_base_loaded():
+        relevant_docs = search_knowledge_base(data.message, top_k=3)
+        if relevant_docs:
+            knowledge_context = f"""
+Relevant fitness research and science:
+{relevant_docs}
+"""
 
     messages = [
         {
             "role": "system",
-            "content": f"""You are NEFF, a personal AI fitness coach.
-You have complete knowledge about this user. Use it to give specific personalized advice.
+            "content": f"""You are NEFF, a personal AI fitness coach backed by fitness science.
+You have access to the user's complete data AND relevant fitness research.
 
+USER DATA:
 {context_str}
 
+{knowledge_context}
+
 Rules:
-- Always reference the user's actual data in your answer
+- Use the fitness research to give science-backed answers
+- Always relate advice to the user's actual data
 - If recovery is poor recommend reducing intensity
 - If there is a plateau suggest specific solutions
-- If streak is high acknowledge and motivate
-- Keep answers under 5 sentences
-- Be direct motivating and specific"""
+- Reference the research naturally — don't just quote it
+- Keep answers under 6 sentences
+- Be direct, motivating and specific"""
         },
         {
             "role": "user",
@@ -157,3 +173,94 @@ Rules:
 
     reply = await call_llama(messages)
     return {"reply": reply.strip()}
+@router.get("/pre-workout-briefing/{workout_day_name}")
+async def get_pre_workout_briefing(
+    workout_day_name: str,
+    current_user=Depends(get_current_user),
+    db=Depends(get_database),
+):
+    """
+    Generate a personalized pre-workout briefing.
+    Reads recovery, last session performance, and goals.
+    """
+    from app.services.context import build_user_context, format_context_for_ai
+
+    user_id = str(current_user["_id"])
+
+    # Get full user context
+    context = await build_user_context(user_id, db)
+
+    # Get last time user did this exact workout day
+    last_session = await db["workout_logs"].find_one(
+        {
+            "user_id": user_id,
+            "workout_day_name": workout_day_name
+        },
+        sort=[("logged_at", -1)]
+    )
+
+    # Build last session summary
+    last_session_str = "No previous session found for this workout."
+    if last_session:
+        exercise_summaries = []
+        for ex in last_session.get("exercises", []):
+            sets = ex.get("sets", [])
+            if sets:
+                best_weight = max(s["weight_kg"] for s in sets)
+                best_reps = max(s["reps_completed"] for s in sets)
+                exercise_summaries.append(
+                    f"{ex['exercise_name']}: {best_weight}kg × {best_reps} reps"
+                )
+        if exercise_summaries:
+            from datetime import datetime
+            days_ago = (datetime.utcnow() - last_session["logged_at"]).days
+            last_session_str = (
+                f"Last {workout_day_name} was {days_ago} days ago.\n"
+                f"Performance: {', '.join(exercise_summaries)}"
+            )
+
+    # Get today's recovery
+    recovery_str = "Recovery not logged today."
+    if context.get("today_recovery"):
+        r = context["today_recovery"]
+        recovery_str = (
+            f"Recovery score: {r['score']}/100 ({r['status']}) — "
+            f"Sleep: {r['sleep']}hrs, "
+            f"Energy: {r['energy']}/10, "
+            f"Soreness: {r['soreness']}/10"
+        )
+
+    messages = [
+        {
+            "role": "system",
+            "content": """You are NEFF, a personal AI fitness coach giving a pre-workout briefing.
+Be direct, specific, and motivating. Like a coach talking to an athlete before they train.
+Keep it under 5 sentences total. No bullet points. Just talk to them naturally."""
+        },
+        {
+            "role": "user",
+            "content": f"""Give me a pre-workout briefing for {workout_day_name}.
+
+My data:
+- Goal: {context['goal']}
+- Current streak: {context['current_streak']} days
+- {recovery_str}
+- {last_session_str}
+- Plateaus detected: {', '.join(context['plateau_exercises']) if context['has_plateaus'] else 'None'}
+
+Tell me:
+1. How hard I should train today based on recovery
+2. What to aim for based on last session
+3. One specific focus point for this session"""
+        }
+    ]
+
+    briefing = await call_llama(messages)
+
+    return {
+        "workout_day_name": workout_day_name,
+        "briefing": briefing.strip(),
+        "recovery_score": context.get("today_recovery", {}).get("score") if context.get("today_recovery") else None,
+        "recovery_status": context.get("today_recovery", {}).get("status") if context.get("today_recovery") else None,
+        "current_streak": context["current_streak"],
+    }
