@@ -16,13 +16,13 @@ def get_groq_client():
 
 async def call_llama(messages: list) -> str:
     """
-    Send messages to Llama 3.1 via Groq and get response.
+    Send messages to Llama 3.3 via Groq and get response.
     messages = list of {role, content} dicts
     """
     client = get_groq_client()
 
     response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+       model="llama-3.3-70b-versatile"
         messages=messages,
         temperature=0.7,
         max_tokens=2000,
