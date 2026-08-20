@@ -22,7 +22,7 @@ async def call_llama(messages: list) -> str:
     client = get_groq_client()
 
     response = client.chat.completions.create(
-       model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-20b",
         messages=messages,
         temperature=0.7,
         max_tokens=2000,
