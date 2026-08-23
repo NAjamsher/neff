@@ -29,3 +29,40 @@ Compound movements vs isolation:
 - Compound movements (bench press, squat, deadlift) should form the foundation.
 - Isolation movements (flyes, curls, lateral raises) add additional volume to specific muscles.
 - Ratio: 70% compound, 30% isolation is a good guideline.
+
+Dr. Brad Schoenfeld is widely considered the leading researcher in hypertrophy science.
+His 2010 paper on the mechanisms of muscle hypertrophy identified three primary drivers: mechanical tension, metabolic stress, and muscle damage.
+Subsequent research has shown mechanical tension to be the most important of the three.
+
+Renaissance Periodization founded by Dr. Mike Israetel introduced the concept of volume landmarks.
+Minimum Effective Volume is the least amount of weekly sets that produces measurable muscle growth.
+Maximum Adaptive Volume is the optimal range where muscle growth is maximized.
+Maximum Recoverable Volume is the point beyond which more training produces diminishing returns or injury.
+
+For most muscle groups the MEV is 10 sets per week, MAV is 15 to 20 sets, and MRV is beyond 20 sets.
+Individual variation is significant and these numbers shift based on training age, recovery, and genetics.
+Beginners can grow with as few as 5 sets per muscle per week because everything is a new stimulus.
+
+Proximity to failure is the most important variable in hypertrophy training according to recent research.
+Sets taken within 3 to 4 reps of failure produce significantly more hypertrophy than sets stopped far from failure.
+This does not mean every set must go to absolute failure which increases injury risk and recovery demand.
+Leaving 2 reps in reserve on most sets and occasionally going to failure is the evidence-based approach.
+
+Muscle protein synthesis is the biological process by which muscle fibers are repaired and grown.
+It is elevated for 24 to 48 hours after a training session and returns to baseline by 72 hours.
+Training a muscle group every 48 to 72 hours is therefore theoretically optimal for maximizing growth.
+Push pull legs 6 days per week and upper lower 4 days per week both achieve this frequency.
+
+Eccentric training refers to the lengthening phase of a muscle contraction.
+Research consistently shows that slow controlled eccentrics of 2 to 4 seconds produce greater hypertrophy than fast eccentrics.
+This is because the muscle is under tension for longer and experiences more mechanical damage during the stretch.
+
+Compound movements should form the foundation of any hypertrophy program.
+The bench press, squat, deadlift, and overhead press recruit the most total muscle mass.
+Isolation movements like curls, flyes, and lateral raises provide additional volume to specific muscles.
+A ratio of 70 percent compound to 30 percent isolation is a commonly recommended guideline.
+
+Mind muscle connection refers to consciously focusing on the target muscle during an exercise.
+Research by Schoenfeld and Contreras (2016) showed that this focus increases muscle activation in the target area.
+For isolation exercises like bicep curls the mind muscle connection is particularly important.
+For compound exercises like squats focusing on technique rather than specific muscles is more effective.
