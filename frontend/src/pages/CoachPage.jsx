@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Send, Bot, User } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
 import api from '../services/api'
 import useAuthStore from '../store/authStore'
 
@@ -67,7 +68,21 @@ export default function CoachPage() {
             </div>
             <div className={`max-w-[80%] px-4 py-3 rounded-xl text-sm leading-relaxed
               ${msg.role === 'assistant' ? 'bg-neff-border text-white' : 'bg-neff-green text-black font-medium'}`}>
-              {msg.content}
+              {msg.role === 'assistant' ? (
+                <ReactMarkdown
+                  components={{
+                    p: ({children}) => <p className="mb-2 last:mb-0">{children}</p>,
+                    strong: ({children}) => <strong className="text-neff-green font-semibold">{children}</strong>,
+                    ul: ({children}) => <ul className="list-disc list-inside space-y-1 mb-2">{children}</ul>,
+                    ol: ({children}) => <ol className="list-decimal list-inside space-y-1 mb-2">{children}</ol>,
+                    li: ({children}) => <li className="text-white">{children}</li>,
+                  }}
+                >
+                  {msg.content}
+                </ReactMarkdown>
+              ) : (
+                msg.content
+              )}
             </div>
           </div>
         ))}
