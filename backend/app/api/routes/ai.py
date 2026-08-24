@@ -25,7 +25,7 @@ async def call_llama(messages: list) -> str:
         model="openai/gpt-oss-20b",
         messages=messages,
         temperature=0.7,
-        max_tokens=2000,
+        max_tokens=4000,
     )
 
     return response.choices[0].message.content
