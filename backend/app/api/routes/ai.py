@@ -85,12 +85,23 @@ Return ONLY this JSON format:
     ]
 
     raw = await call_llama(messages)
+    print(f"RAW AI RESPONSE: {raw}")
 
     try:
         start = raw.find("{")
         end = raw.rfind("}") + 1
-        plan_data = json.loads(raw[start:end])
-    except Exception:
+        if start == -1 or end == 0:
+            print(f"JSON NOT FOUND IN RESPONSE: {raw}")
+            raise HTTPException(
+                status_code=500,
+                detail="AI returned invalid response. Try again."
+            )
+        json_str = raw[start:end]
+        print(f"EXTRACTED JSON: {json_str[:200]}")
+        plan_data = json.loads(json_str)
+    except json.JSONDecodeError as e:
+        print(f"JSON PARSE ERROR: {e}")
+        print(f"RAW RESPONSE WAS: {raw}")
         raise HTTPException(
             status_code=500,
             detail="AI returned invalid response. Try again."
@@ -119,7 +130,6 @@ Return ONLY this JSON format:
         "plan_id": str(result.inserted_id),
         "plan": plan_data,
     }
-
 
 @router.post("/coach")
 async def ask_coach(
